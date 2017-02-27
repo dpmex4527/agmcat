@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+require 'gli'
+require 'json'
+
+module Agmcat
+  module CLI
+    include GLI::App
+    extend self
+
+    config_file '.agmcat.rc'
+    program_desc 'Migrate HPE Agile Manager user stories to GitHub Issues.'
+
+    version Agmcat::VERSION
+
+    subcommand_option_handling :normal
+    arguments :strict
+
+    # Set up global flags
+    desc 'GitHub username'
+    flag [:u , :github_user], :default_value => ENV['GITHUB_USER_NAME']
+
+    desc 'GitHub access token'
+    flag [:t , :github_token], :default_value => ENV['GITHUB_API_TOKEN'], :mask => true
+
+    desc 'GitHub repository'
+    flag [:r , :github_repo], :default_value => ENV['GITHUB_REPOSITORY']
+
+    desc 'HPE AGM API URL'
+    flag [:a , :agm_url], :default_value => ENV['AGM_API_URL']
+
+    desc 'HPE AGM client id'
+    flag [:c , :agm_id], :default_value => ENV['AGM_CLIENT_ID'], :mask => true
+
+    desc 'HPE AGM client secret'
+    flag [:d , :agm_secret], :default_value => ENV['AGM_CLIENT_SECRET'], :mask => true
+
+    desc 'HPE AGM client secret'
+    flag [:p , :proxy], :default_value => ENV['HTTP_PROXY']
+
+    # TODO: implement user mapping
+    #desc 'User mapping'
+    #long_desc %{
+    #  JSON file that contains user mapping between AGM -> GitHub.
+    #}
+    #flag [:x , :user_map], :default_value => ENV['AGMCAT_MAP_FILE']
+
+    require_relative '../lib/cli'
+
+    pre do |global,command,options,args|
+      # Pre logic here
+      # Return true to proceed; false to abort and not call the
+      # chosen command
+      # Use skips_pre before a command to skip this block
+      # on that command only
+      true
+    end
+
+    post do |global,command,options,args|
+      # Post logic here
+      # Use skips_post before a command to skip this
+      # block on that command only
+    end
+
+    on_error do |exception|
+      # Error logic here
+      # return false to skip default error handling
+      true
+    end
+
+    exit run(ARGV)
+  end
+end

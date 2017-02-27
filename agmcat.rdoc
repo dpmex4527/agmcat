@@ -1,0 +1,5 @@
+= agmcat
+
+Generate this with
+    agmcat rdoc
+After you have described your command line interface
